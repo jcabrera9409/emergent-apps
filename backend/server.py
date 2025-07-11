@@ -28,7 +28,13 @@ app.add_middleware(
 # Security
 security = HTTPBearer()
 JWT_SECRET = os.environ.get("JWT_SECRET", "your-super-secret-jwt-key-change-in-production")
-ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY", base64.urlsafe_b64encode(Fernet.generate_key()).decode())
+
+# Generate or get encryption key
+if "ENCRYPTION_KEY" in os.environ:
+    ENCRYPTION_KEY = os.environ["ENCRYPTION_KEY"]
+else:
+    # Generate a new key for this session
+    ENCRYPTION_KEY = base64.urlsafe_b64encode(Fernet.generate_key()).decode()
 
 # MongoDB connection
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
@@ -41,7 +47,7 @@ namespaces_collection = db.namespaces
 credentials_collection = db.credentials
 
 # Encryption setup
-fernet = Fernet(ENCRYPTION_KEY.encode() if isinstance(ENCRYPTION_KEY, str) else ENCRYPTION_KEY)
+fernet = Fernet(ENCRYPTION_KEY)
 
 # Pydantic models
 class UserRegister(BaseModel):
