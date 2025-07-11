@@ -29,12 +29,12 @@ app.add_middleware(
 security = HTTPBearer()
 JWT_SECRET = os.environ.get("JWT_SECRET", "your-super-secret-jwt-key-change-in-production")
 
-# Generate or get encryption key
+# Generate or get encryption key - ensure it's properly formatted
 if "ENCRYPTION_KEY" in os.environ:
     ENCRYPTION_KEY = os.environ["ENCRYPTION_KEY"]
 else:
-    # Generate a new key for this session
-    ENCRYPTION_KEY = base64.urlsafe_b64encode(Fernet.generate_key()).decode()
+    # Generate a new key for this session - this returns bytes, so we need to use it directly
+    ENCRYPTION_KEY = Fernet.generate_key()
 
 # MongoDB connection
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
