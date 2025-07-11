@@ -52,7 +52,7 @@ fernet = Fernet(ENCRYPTION_KEY)
 # Pydantic models
 class UserRegister(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
-    email: str = Field(..., regex=r'^[^@]+@[^@]+\.[^@]+$')
+    email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$')
     password: str = Field(..., min_length=6)
     full_name: str = Field(..., min_length=1, max_length=100)
 
